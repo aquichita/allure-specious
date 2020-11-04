@@ -1,0 +1,12 @@
+# Dev/Deployment
+sphinx
+sphinx_rtd_theme
+nose
+coverage
+pypi-publisher
+setuptools==50.3.2
+selenium==3.141.0
+Pillow==8.0.1
+requests==2.24.0
+keyring==21.4.0
+yagmail==0.14.245
