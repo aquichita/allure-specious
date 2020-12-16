@@ -12,6 +12,133 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from specious import binding
 
+report_template = """<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自动化测试执行报告</title>
+    <style>
+        body {
+            background-color: #F3F3F5;
+        }
+        .content {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-spacing: 0 20px;
+        }
+        .stratified {
+            font-size:0.80em;
+            padding:4px;
+        }
+        .error {
+            font-size:0.80em;
+            padding:4px;
+            color:red;
+        }
+        th {
+            background-color:#F3F3F5;
+            padding:4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <table class="content" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+            <tbody>
+                <tr> </tr>
+            </tbody>
+        </table>
+        <table class="content" bgcolor="#FFFFFF" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+            <!-- # SUITE -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+                        <tr>
+                            <td>
+                                <table class="stratified" border="1" cellpadding="" cellspacing="" width="100%"
+                                    style="border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">测试套</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">测试点</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">通过</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">失败</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">阻塞</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">忽略</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">未标识</p>
+                                            </th>
+                                            <th align="center" width="12.5%">
+                                                <p style="margin: 0;">通过率</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {result_row}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!-- # GRAPH -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+                        <tr>
+                            <td>
+                                <table class="stratified" border="0" cellpadding="" cellspacing="" width="100%"
+                                    style="border-collapse: collapse;">
+                                    <tr>
+                                        <td align="left">
+                                            <img src="data:image/png;base64,{STATUS}" alt="STATUS" width="100%"/>
+                                        </td>
+                                        <td align="left">
+                                            <img src="data:image/png;base64,{SEVERITY}" alt="SEVERITY" width="100%"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left">
+                                            <img src="data:image/png;base64,{DURATION}" alt="DURATION" width="100%"/>
+                                        </td>
+                                        <td align="left">
+                                            <img src="data:image/png;base64,{TREND}" alt="TREND" width="100%"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table class="content" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+            <tbody><tr> </tr></tbody>
+        </table>
+    </div>
+</body>
+</html>
+"""
+
 row_template = """
 <tr>
     <td align="center">
@@ -65,11 +192,7 @@ class Results:
     @property
     def tests(self):
         return (
-            self.passed
-            + self.failed
-            + self.broken
-            + self.skipped
-            + self.unknown
+            self.passed + self.failed + self.broken + self.skipped + self.unknown
         )  # noqa
 
     @property
@@ -86,9 +209,7 @@ def get_group_results(results_dir, suit):
             name = label.get("name")
             value = label.get("value")
             if name == suit and value not in groups.keys():
-                groups.setdefault(
-                    label.get("value"), Results(0, 0, 0, 0, 0)
-                )  # noqa
+                groups.setdefault(label.get("value"), Results(0, 0, 0, 0, 0))  # noqa
     # 获取每行执行数据
     for group_name, group_value in groups.items():
         for r in allure_results(results_dir):
@@ -144,9 +265,7 @@ def get_group_results(results_dir, suit):
 
 class AllureGraph:
     def __init__(self, url):
-        self.driver = binding.launch(
-            headless=True, infobars=True, mirrors=True
-        )  # noqa
+        self.driver = binding.launch(headless=True, infobars=True, mirrors=True)  # noqa
         self.driver.get(url)
         self.driver.maximize_window()
         time.sleep(10)
@@ -181,26 +300,21 @@ def report_content(
     results_dir,
     suit="epic",
 ):
-    with open(
-        Path(__file__).resolve().parent.joinpath("email.html"), mode="rb"
-    ) as template:  # noqa
-        content = template.read()
-        content = content.decode("utf-8", "ignore")
-        content = content.replace(
-            "{result_row}", get_group_results(results_dir, suit)
-        )  # noqa
+    content = report_template.replace(
+        "{result_row}", get_group_results(results_dir, suit)
+    )  # noqa
 
-        content = content.replace("\r", "")
-        content = content.replace("\n", "")
-        content = content.replace("\t", "")
+    content = content.replace("\r", "")
+    content = content.replace("\n", "")
+    content = content.replace("\t", "")
 
-        allure = AllureGraph(allure_url)
-        content = content.replace("{STATUS}", allure.base64pics()[0])
-        content = content.replace("{SEVERITY}", allure.base64pics()[1])
-        content = content.replace("{DURATION}", allure.base64pics()[2])
-        content = content.replace("{TREND}", allure.base64pics()[3])
+    allure = AllureGraph(allure_url)
+    content = content.replace("{STATUS}", allure.base64pics()[0])
+    content = content.replace("{SEVERITY}", allure.base64pics()[1])
+    content = content.replace("{DURATION}", allure.base64pics()[2])
+    content = content.replace("{TREND}", allure.base64pics()[3])
 
-        return content
+    return content
 
 
 def email(
