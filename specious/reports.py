@@ -182,7 +182,7 @@ def report_content(
     suit="epic",
 ):
     with open(
-        Path(".").resolve().joinpath("email.html"), mode="rb"
+        Path(__file__).resolve().parent.joinpath("email.html"), mode="rb"
     ) as template:  # noqa
         content = template.read()
         content = content.decode("utf-8", "ignore")

@@ -17,7 +17,7 @@ def readme() -> str:
 setup(
     name="specious",
     packages=["specious"],
-    version="0.0.3",
+    version="0.0.4",
     author="aquichita",
     author_email="chaochao.wu@outlook.com",
     description="Just screenshot allure report and send.",
