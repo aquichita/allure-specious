@@ -10,6 +10,7 @@ venv/
 allure-results/
 dist/
 .pytest_cache/
+.mypy_cache/
 
 # Packages
 *.egg

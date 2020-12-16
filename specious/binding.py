@@ -65,7 +65,9 @@ def launch(
                 options=chrome_options,
                 **kwargs,
             )
-        return webdriver.Chrome(executable_path, options=chrome_options, **kwargs)
+        return webdriver.Chrome(
+            executable_path, options=chrome_options, **kwargs
+        )  # noqa
     elif name == BrowserType.FIREFOX.value:
         firefox_options = get_options(FirefoxOptions())
         if not executable_path:
@@ -77,7 +79,9 @@ def launch(
                 options=firefox_options,
                 **kwargs,
             )
-        return webdriver.Firefox(executable_path, options=firefox_options, **kwargs)
+        return webdriver.Firefox(
+            executable_path, options=firefox_options, **kwargs
+        )  # noqa
     elif name == BrowserType.IE.value:
         ie_options = get_options(IeOptions())
         if not executable_path:

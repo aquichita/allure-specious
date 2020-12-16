@@ -65,7 +65,11 @@ class Results:
     @property
     def tests(self):
         return (
-            self.passed + self.failed + self.broken + self.skipped + self.unknown
+            self.passed
+            + self.failed
+            + self.broken
+            + self.skipped
+            + self.unknown
         )  # noqa
 
     @property
@@ -82,7 +86,9 @@ def get_group_results(results_dir, suit):
             name = label.get("name")
             value = label.get("value")
             if name == suit and value not in groups.keys():
-                groups.setdefault(label.get("value"), Results(0, 0, 0, 0, 0))  # noqa
+                groups.setdefault(
+                    label.get("value"), Results(0, 0, 0, 0, 0)
+                )  # noqa
     # 获取每行执行数据
     for group_name, group_value in groups.items():
         for r in allure_results(results_dir):
@@ -138,7 +144,9 @@ def get_group_results(results_dir, suit):
 
 class AllureGraph:
     def __init__(self, url):
-        self.driver = binding.launch(headless=True, infobars=True, mirrors=True)
+        self.driver = binding.launch(
+            headless=True, infobars=True, mirrors=True
+        )  # noqa
         self.driver.get(url)
         self.driver.maximize_window()
         time.sleep(10)
@@ -173,10 +181,14 @@ def report_content(
     results_dir,
     suit="epic",
 ):
-    with open(Path(".").resolve().joinpath("email.html"), mode="rb") as template:
+    with open(
+        Path(".").resolve().joinpath("email.html"), mode="rb"
+    ) as template:  # noqa
         content = template.read()
         content = content.decode("utf-8", "ignore")
-        content = content.replace("{result_row}", get_group_results(results_dir, suit))
+        content = content.replace(
+            "{result_row}", get_group_results(results_dir, suit)
+        )  # noqa
 
         content = content.replace("\r", "")
         content = content.replace("\n", "")

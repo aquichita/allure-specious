@@ -1,41 +1,36 @@
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
+import sys
 
-__version__ = '0.0.1'
+from setuptools import setup
+from pathlib import Path
 
-here = path.abspath(path.dirname(__file__))
 
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+assert sys.version_info >= (3, 8, 0), "specious requires Python 3.8+"
 
-# get the dependencies and installs
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    all_reqs = f.read().split('\n')
+CURRENT_DIR = Path(__file__).parent
+sys.path.insert(0, str(CURRENT_DIR))
 
-install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
+
+def readme() -> str:
+    return (CURRENT_DIR / "README.md").read_text(encoding="utf8")
+
 
 setup(
-    name='specious',
-    version=__version__,
-    description='Just screenshot allure report and send.',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    url='https://github.com/aquichita/allure-specious',
-    download_url='https://github.com/aquichita/allure-specious/tarball/' + __version__,
-    license='BSD',
-    classifiers=[
-      'Development Status :: 3 - Alpha',
-      'Intended Audience :: Developers',
-      'Programming Language :: Python :: 3.8',
+    name="specious",
+    packages=["specious"],
+    version="0.0.3",
+    author="aquichita",
+    author_email="chaochao.wu@outlook.com",
+    description="Just screenshot allure report and send.",
+    long_description=readme(),
+    long_description_content_type="text/markdown",
+    install_requires=[
+        "webdriver-manager",
+        "keyring",
+        "yagmail",
+        "selenium",
     ],
-    keywords='',
-    packages=find_packages(exclude=['docs', 'tests*']),
+    url="https://github.com/aquichita/specious",
     include_package_data=True,
-    author='aquichita',
-    install_requires=install_requires,
-    dependency_links=dependency_links,
-    author_email='chaochao.wu@outlook.com'
+    tests_require=["pytest", "pytest-cov", "pytest-sugar"],
+    python_requires=">=3.8",
 )
