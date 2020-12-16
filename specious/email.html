@@ -1,0 +1,130 @@
+<!--
+ * @Author: aquichita
+ * @Date: 2020-11-28 15:11:04
+ * @Description: Automated test report by email template.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>自动化测试执行报告</title>
+	<style>
+		body {
+			background-color: #F3F3F5;
+		}
+		.content {
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+			border-spacing: 0 20px;
+		}
+		.stratified {
+			font-size:0.80em;
+            padding:4px;
+		}
+		.error {
+			font-size:0.80em;
+            padding:4px;
+            color:red;
+		}
+		th {
+            background-color:#F3F3F5;
+			padding:4px;
+        }
+	</style>
+</head>
+
+<body>
+	<div>
+		<table class="content" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+			<tbody>
+				<tr> </tr>
+			</tbody>
+		</table>
+		<table class="content" bgcolor="#FFFFFF" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+			<!-- # SUITE -->
+			<tr>
+				<td>
+					<table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+						<tr>
+							<td>
+								<table class="stratified" border="1" cellpadding="" cellspacing="" width="100%"
+									style="border-collapse: collapse;">
+									<thead>
+										<tr>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">测试套</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">测试点</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">通过</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">失败</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">阻塞</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">忽略</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">未标识</p>
+											</th>
+											<th align="center" width="12.5%">
+												<p style="margin: 0;">通过率</p>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{result_row}
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<!-- # GRAPH -->
+			<tr>
+				<td>
+					<table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+						<tr>
+							<td>
+								<table class="stratified" border="0" cellpadding="" cellspacing="" width="100%"
+									style="border-collapse: collapse;">
+									<tr>
+										<td align="left">
+											<img src="data:image/png;base64,{STATUS}" alt="STATUS" width="100%"/>
+										</td>
+										<td align="left">
+											<img src="data:image/png;base64,{SEVERITY}" alt="SEVERITY" width="100%"/>
+										</td>
+									</tr>
+									<tr>
+										<td align="left">
+											<img src="data:image/png;base64,{DURATION}" alt="DURATION" width="100%"/>
+										</td>
+										<td align="left">
+											<img src="data:image/png;base64,{TREND}" alt="TREND" width="100%"/>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table class="content" align="center" border="0" cellpadding="0" cellspacing="0" width="90%">
+			<tbody><tr> </tr></tbody>
+		</table>
+	</div>
+</body>
+</html>
